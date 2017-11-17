@@ -1,4 +1,10 @@
 var headset;
+var teleportationRequestInitiated = false;
+var teleportationCircle;
+var haloCenter = new BABYLON.Vector3(0, 0, 0);
+
+
+
 // If a VR headset is connected, get its info
 navigator.getVRDisplays().then(function (displays) {
     if (displays[0]) {
@@ -45,6 +51,33 @@ window.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function onControllersAttached() {
+    console.log("Both VR controllers detected.");
+    
+    if (camera.leftController) {
+        // Removing the gaze circle when using VR controllers
+        if (target) {
+            target.isVible = false;
+        }
+
+        // A button on Oculus Touch, Grip button on Vive
+        camera.leftController.onMainButtonStateChangedObservable.add(function (stateObject) {
+            // on pressed
+            if (stateObject.value === 1) {
+                teleportationRequestInitiated = true;
+            }
+            // on released
+            else {
+                if (teleportationAllowed) {
+                    camera.position.x = haloCenter.x;
+                    camera.position.z = haloCenter.z;
+                }
+                teleportationRequestInitiated = false;
+            }
+        });
+    }
+}
+
     // Get all connected gamepads
     var gamepads = new BABYLON.Gamepads(function (gamepad) { onNewGamepadConnected(gamepad); });
 
@@ -68,11 +101,11 @@ window.addEventListener('DOMContentLoaded', function () {
         // create a UniversalCamera that be controlled with gamepad or keyboard
         if(headset){
             // Create a WebVR camera with the trackPosition property set to false so that we can control movement with the gamepad
-            camera = new BABYLON.WebVRFreeCamera("vrcamera", new BABYLON.Vector3(0, 14, 0), scene, true, { trackPosition: true });
+            camera = new BABYLON.WebVRFreeCamera("vrcamera", new BABYLON.Vector3(0, 13, 0), scene, true, { trackPosition: true });
             camera.deviceScaleFactor = 1;
         } else {
             // No headset, use universal camera
-            camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 18, -45), scene);
+            camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 15, 0), scene);
         }
         camera.rotation.y += degreesToRadians(90);
 
