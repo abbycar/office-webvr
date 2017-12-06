@@ -79,7 +79,7 @@ window.addEventListener('DOMContentLoaded', function () {
 }
 
     // Get all connected gamepads
-    var gamepads = new BABYLON.Gamepads(function (gamepad) { onNewGamepadConnected(gamepad); });
+    //var gamepads = new BABYLON.Gamepads(function (gamepad) { onNewGamepadConnected(gamepad); });
 
 
     // Grab where we'll be displayed the game
@@ -195,7 +195,7 @@ window.addEventListener('DOMContentLoaded', function () {
     function enableAndCheckCollisions() {
         scene.collisionsEnabled = true;
         camera.checkCollisions = true;
-        ground.checkCollisions = true;
+        //ground.checkCollisions = true;
 
         // Loop through all walls and make them collidable
         for (var i = 0; i < collidableObjects.length; i++) {
